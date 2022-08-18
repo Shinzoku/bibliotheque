@@ -20,6 +20,9 @@ class Emprunt
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_retour = null;
 
+    #[ORM\ManyToOne(inversedBy: 'emprunt')]
+    private ?Emprunteur $emprunteur = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,18 @@ class Emprunt
     public function setDateRetour(?\DateTimeInterface $date_retour): self
     {
         $this->date_retour = $date_retour;
+
+        return $this;
+    }
+
+    public function getEmprunteur(): ?Emprunteur
+    {
+        return $this->emprunteur;
+    }
+
+    public function setEmprunteur(?Emprunteur $emprunteur): self
+    {
+        $this->emprunteur = $emprunteur;
 
         return $this;
     }
