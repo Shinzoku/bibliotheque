@@ -31,6 +31,9 @@ class Emprunteur
     #[ORM\OneToMany(mappedBy: 'emprunteur', targetEntity: Emprunt::class)]
     private Collection $emprunt;
 
+    #[ORM\Column]
+    private ?bool $actif = null;
+
     public function __construct()
     {
         $this->emprunt = new ArrayCollection();
@@ -115,6 +118,18 @@ class Emprunteur
                 $emprunt->setEmprunteur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isActif(): ?bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(bool $actif): self
+    {
+        $this->actif = $actif;
 
         return $this;
     }

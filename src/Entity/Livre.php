@@ -28,7 +28,7 @@ class Livre
     private ?string $code_isbn = null;
 
     #[ORM\ManyToOne(inversedBy: 'livres')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Auteur $auteur = null;
 
     #[ORM\ManyToMany(targetEntity: Genre::class, inversedBy: 'livres')]

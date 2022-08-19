@@ -27,6 +27,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column]
+    private ?bool $enabled = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -114,5 +117,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function isEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
     }
 }
