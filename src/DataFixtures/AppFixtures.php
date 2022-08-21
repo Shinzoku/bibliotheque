@@ -201,6 +201,8 @@ class AppFixtures extends Fixture
         $password = $this->hasher->hashPassword($user, '123');
         $user->setPassword($password);
         $user->setEnabled(true);
+        $user->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-01-01 09:00:00'));
+        $user->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-01-01 09:00:00'));
 
         $manager->persist($user);
 
@@ -214,6 +216,8 @@ class AppFixtures extends Fixture
                 'password' => '123',
                 'enable' => true,
                 'actif' => true,
+                'createdAt' => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-01-01 10:00:00'),
+                'updatedAt' => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-01-01 10:00:00'),
             ],
             [
                 'nom' => 'bar',
@@ -224,6 +228,8 @@ class AppFixtures extends Fixture
                 'password' => '123',
                 'enable' => false,
                 'actif' => false,
+                'createdAt' => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-02-01 11:00:00'),
+                'updatedAt' => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-02-01 11:00:00'),
             ],
             [
                 'nom' => 'baz',
@@ -234,6 +240,8 @@ class AppFixtures extends Fixture
                 'password' => '123',
                 'enable' => true,
                 'actif' => true,
+                'createdAt' => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-03-01 12:00:00'),
+                'updatedAt' => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-03-01 12:00:00'),
             ],
         ];
 
@@ -244,6 +252,8 @@ class AppFixtures extends Fixture
             $password = $this->hasher->hashPassword($user, $emprunteurData['password']);
             $user->setPassword($password);
             $user->setEnabled($emprunteurData['enable']);
+            $user->setCreatedAt($emprunteurData['createdAt']);
+            $user->setUpdatedAt($emprunteurData['updatedAt']);
 
             $manager->persist($user);
 
@@ -253,6 +263,8 @@ class AppFixtures extends Fixture
             $emprunteur->setPrenom($emprunteurData['prenom']);
             $emprunteur->setTel($emprunteurData['tel']);
             $emprunteur->setActif($emprunteurData['actif']);
+            $emprunteur->setCreatedAt($emprunteurData['createdAt']);
+            $emprunteur->setUpdatedAt($emprunteurData['updatedAt']);
 
             $manager->persist($emprunteur);
         }

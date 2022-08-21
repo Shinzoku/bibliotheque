@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Emprunteur;
+use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +39,57 @@ class EmprunteurRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findByUser(User $user): ?Emprunteur
+    {
+        return $this->createQueryBuilder('e')
+            ->join('e.user', 'u')
+            ->andWhere('u.id = :userId')
+            ->setParameter('userId', $user->getId())
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * @return Emprunteur[] Returns an array of Emprunteur objects
+     */
+    public function findByKeywordNomPrenom($keyword): array
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.nom LIKE :keyword')
+            ->orWhere('e.prenom LIKE :keyword')
+            ->setParameter('keyword', "%{$keyword}%")
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Emprunteur[] Returns an array of Emprunteur objects
+     */
+    public function findByKeywordTel($keyword): array
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.tel LIKE :keyword')
+            ->setParameter('keyword', "%{$keyword}%")
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Emprunteur[] Returns an array of Emprunteur objects
+     */
+    public function findByDateAnterieurCreatedAt(DateTimeImmutable $date): array
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.created_at < :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**

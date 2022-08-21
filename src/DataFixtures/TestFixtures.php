@@ -54,7 +54,7 @@ class TestFixtures extends Fixture
         $repository = $this->doctrine->getRepository(Genre::class);
         $genres = $repository->findAll();
 
-        for ($i = 0; $i < 1000; $i++) { 
+        for ($i = 0; $i < 1000; $i++) {
             $livre = new Livre();
             $livre->setTitre($faker->sentence(3));
             $livre->setAnneeEdition($faker->numberBetween(1960, 2022));
@@ -64,10 +64,10 @@ class TestFixtures extends Fixture
             $auteur = $faker->randomElement($auteurs);
             $livre->setAuteur($auteur);
 
-            $genres = $faker->randomElements($genres);
+            $genreRandoms = $faker->randomElements($genres);
 
-            foreach ($genres as $genre) {
-                $livre->addGenre($genre);
+            foreach ($genreRandoms as $genreRandom) {
+                $livre->addGenre($genreRandom);
             }
             
             $manager->persist($livre);
@@ -85,6 +85,10 @@ class TestFixtures extends Fixture
             $password = $this->hasher->hashPassword($user, '123');
             $user->setPassword($password);
             $user->setEnabled(true);
+            $date = $date = $faker->dateTimeThisYear();
+            $date = DateTimeImmutable::createFromInterface($date);
+            $user->setCreatedAt($date);
+            $user->setUpdatedAt($date);
 
             $manager->persist($user);
 
@@ -94,6 +98,8 @@ class TestFixtures extends Fixture
             $emprunteur->setPrenom($faker->firstName($gender = 'male'|'female'));
             $emprunteur->setTel($faker->phoneNumber());
             $emprunteur->setActif(true);
+            $emprunteur->setCreatedAt($date);
+            $emprunteur->setUpdatedAt($date);
 
             $manager->persist($emprunteur);
         }
@@ -125,9 +131,10 @@ class TestFixtures extends Fixture
             $emprunteur = $faker->randomElement($emprunteurs);
             $emprunt->setEmprunteur($emprunteur);
 
-            $livres = $faker->randomElements($livres, 3);
-            foreach ($livres as $livre) {
-                $emprunt->setLivre($livre);
+            $count = $faker->numberBetween(1, 3);
+            $livreRandoms = $faker->randomElements($livres, $count);
+            foreach ($livreRandoms as $livreRandom) {
+                $emprunt->setLivre($livreRandom);
             }
 
             $manager->persist($emprunt);

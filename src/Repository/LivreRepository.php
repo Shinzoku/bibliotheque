@@ -39,6 +39,34 @@ class LivreRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Livre[] Returns an array of Livre objects
+     */
+    public function findByKeyword($keyword): array
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.titre LIKE :keyword')
+            ->setParameter('keyword', "%{$keyword}%")
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Livre[] Returns an array of Livre objects
+     */
+    public function findByKeywordGenre($keyword): array
+    {
+        return $this->createQueryBuilder('l')
+            ->innerJoin('l.genre', 'g')
+            ->andWhere('g.nom LIKE :keyword')
+            ->setParameter('keyword', "%{$keyword}%")
+            ->orderBy('l.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return Livre[] Returns an array of Livre objects
 //     */
