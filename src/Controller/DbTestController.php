@@ -2,18 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\Emprunteur;
-use App\Entity\Livre;
 use App\Entity\User;
-use App\Repository\EmpruntRepository;
-use App\Repository\EmprunteurRepository;
-use App\Repository\LivreRepository;
-use App\Repository\UserRepository;
+use App\Entity\Livre;
 use DateTimeImmutable;
+use App\Entity\Emprunteur;
+use App\Repository\UserRepository;
+use App\Repository\LivreRepository;
+use App\Repository\EmpruntRepository;
+use Doctrine\Persistence\ObjectManager;
+use App\Repository\EmprunteurRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DbTestController extends AbstractController
 {
@@ -142,5 +143,48 @@ class DbTestController extends AbstractController
         dump($emprunts);
 
         exit();
+    }
+
+    #[Route('/db/test/new', name: 'app_db_test_livre_new', methods: ['GET', 'POST'])]
+    public function new(
+        ObjectManager $manager, Livre $livre,
+        AuteurRepository $auteurRepository,
+        GenreRepository $genreRepositiry
+        ): Response
+    {
+        $auteur = $auteurRepository->find(2);
+        $genre = $genreRepositiry->find(6);
+
+        $livre = new Livre();
+        $livre->setTitre('Totum autem id externum');
+        $livre->setAnneeEdition(2020);
+        $livre->setNombrePages(300);
+        $livre->setCodeIsbn('9790412882714');
+        $livre->setAuteur($auteur);
+        $livre->addGenre($genre);
+
+        $manager->persist($livre);
+        $manager->flush();
+    }
+
+    #[Route('/db/test/edit', name: 'app_db_test_livre_edit', methods: ['GET', 'POST'])]
+    public function edit(LivreRepository $livreRepository, GenreRepository $genreRepositiry): Response
+    {
+        $genreSelected = $genreRepository->find(2);
+        $genreNew =$genreRepository->find(5);
+        $livre->$livreRepository->find(2);
+        $livre->setTitre('Aperiendum est igitur');
+        $livre->removeGenre($genreSelected);
+        $livre->addGenre($genreNew);
+
+        $manager->persist($livre);
+        $manager->flush();
+    }
+
+    #[Route('/db/test/delete', name: 'app_db_test_livre_delete', methods: ['POST'])]
+    public function delete(LivreRepository $livreRepository): Response
+    {
+        $livre = $livreRepository->find(123);
+        $livreRepository->remove($livre, true);
     }
 }
