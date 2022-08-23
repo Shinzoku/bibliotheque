@@ -145,8 +145,8 @@ class DbTestController extends AbstractController
         exit();
     }
 
-    #[Route('/db/test/new', name: 'app_db_test_livre_new', methods: ['GET', 'POST'])]
-    public function new(
+    #[Route('/db/test/livres/new', name: 'app_db_test_livres_new', methods: ['GET', 'POST'])]
+    public function newLivre(
         ObjectManager $manager, Livre $livre,
         AuteurRepository $auteurRepository,
         GenreRepository $genreRepositiry
@@ -165,10 +165,16 @@ class DbTestController extends AbstractController
 
         $manager->persist($livre);
         $manager->flush();
+
+        exit();
     }
 
-    #[Route('/db/test/edit', name: 'app_db_test_livre_edit', methods: ['GET', 'POST'])]
-    public function edit(LivreRepository $livreRepository, GenreRepository $genreRepositiry): Response
+    #[Route('/db/test/livres/edit', name: 'app_db_test_livres_edit', methods: ['GET', 'POST'])]
+    public function editlivre(
+        ObjectManager $manager,
+        LivreRepository $livreRepository,
+        GenreRepository $genreRepositiry
+        ): Response
     {
         $genreSelected = $genreRepository->find(2);
         $genreNew =$genreRepository->find(5);
@@ -179,12 +185,57 @@ class DbTestController extends AbstractController
 
         $manager->persist($livre);
         $manager->flush();
+
+        exit();
     }
 
-    #[Route('/db/test/delete', name: 'app_db_test_livre_delete', methods: ['POST'])]
-    public function delete(LivreRepository $livreRepository): Response
+    #[Route('/db/test/livres/delete', name: 'app_db_test_livres_delete', methods: ['POST'])]
+    public function deleteLivre(LivreRepository $livreRepository): Response
     {
         $livre = $livreRepository->find(123);
         $livreRepository->remove($livre, true);
+
+        exit();
+    }
+
+    #[Route('/db/test/emprunts/new', name: 'app_db_test_emprunts_new', methods: ['GET', 'POST'])]
+    public function newEmprunt(
+        ObjectManager $manager, Emprunt $emprunt,
+        EmprunteurRepository $emprunteurRepository,
+        LivreRepository $livreRepository,
+        ): Response
+    {
+        $emprunteur = $emprunteurRepository->find(1);
+        $livre = $livreRepository->find(1);
+
+        $emprunt = new Emprunt();
+        $emprunt->setDateEmprunt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-12-01 16:00:00'));
+        $emprunt->setDateRetour(null);
+        $emprunt->setEmprunteur($emprunteur);
+        $emprunt->setLivre($livre);
+
+        $manager->persist($emprunt);
+        $manager->flush();
+
+        exit();
+    }
+
+    #[Route('/db/test/emprunts/edit', name: 'app_db_test_emprunts_edit', methods: ['GET', 'POST'])]
+    public function edit(ObjectManager $manager, EmpruntRepository $empruntRepository): Response
+    {
+        $emprunt = $genreRepository->find(3);
+        $emprunt->setDateRetour(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-05-01 10:00:00'));
+
+        $manager->persist($emprunt);
+        $manager->flush();
+
+        exit();
+    }
+
+    #[Route('/db/test/emprunts/delete', name: 'app_db_test_emunts_delete', methods: ['POST'])]
+    public function delete(EmpruntRepository $empruntRepository): Response
+    {
+        $emprunt = $empruntRepository->find(123);
+        $empruntRepository->remove($emprunt, true);
     }
 }
