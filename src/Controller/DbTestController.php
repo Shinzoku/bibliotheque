@@ -2,19 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Entity\Livre;
-use DateTimeImmutable;
+use App\Entity\Emprunt;
 use App\Entity\Emprunteur;
-use App\Repository\UserRepository;
-use App\Repository\LivreRepository;
+use App\Entity\Livre;
+use App\Entity\User;
 use App\Repository\EmpruntRepository;
-use Doctrine\Persistence\ObjectManager;
 use App\Repository\EmprunteurRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\LivreRepository;
+use App\Repository\UserRepository;
+use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DbTestController extends AbstractController
 {
@@ -145,15 +146,18 @@ class DbTestController extends AbstractController
         exit();
     }
 
-    #[Route('/db/test/livres/new', name: 'app_db_test_livres_new', methods: ['GET', 'POST'])]
+    #[Route('/db/test/livres/new', name: 'app_db_test_livres_new')]
     public function newLivre(
-        ObjectManager $manager, Livre $livre,
+        EntityManagerInterface $manager, Livre $livre,
         AuteurRepository $auteurRepository,
         GenreRepository $genreRepositiry
         ): Response
     {
         $auteur = $auteurRepository->find(2);
+        dump($auteur);
+
         $genre = $genreRepositiry->find(6);
+        dump($genre);
 
         $livre = new Livre();
         $livre->setTitre('Totum autem id externum');
@@ -166,19 +170,27 @@ class DbTestController extends AbstractController
         $manager->persist($livre);
         $manager->flush();
 
+        dump($livre);
+
         exit();
     }
 
-    #[Route('/db/test/livres/edit', name: 'app_db_test_livres_edit', methods: ['GET', 'POST'])]
+    #[Route('/db/test/livres/edit', name: 'app_db_test_livres_edit')]
     public function editlivre(
-        ObjectManager $manager,
+        EntityManagerInterface $manager,
         LivreRepository $livreRepository,
         GenreRepository $genreRepositiry
         ): Response
     {
         $genreSelected = $genreRepository->find(2);
+        dump($genreSelected);
+
         $genreNew =$genreRepository->find(5);
+        dump($genreNew);
+
         $livre->$livreRepository->find(2);
+        dump($livre);
+
         $livre->setTitre('Aperiendum est igitur');
         $livre->removeGenre($genreSelected);
         $livre->addGenre($genreNew);
@@ -186,27 +198,38 @@ class DbTestController extends AbstractController
         $manager->persist($livre);
         $manager->flush();
 
+        dump($livre);
+
         exit();
     }
 
-    #[Route('/db/test/livres/delete', name: 'app_db_test_livres_delete', methods: ['POST'])]
-    public function deleteLivre(LivreRepository $livreRepository): Response
+    #[Route('/db/test/livres/delete', name: 'app_db_test_livres_delete')]
+    public function deleteLivre(EntityManagerInterface $manager, LivreRepository $livreRepository): Response
     {
         $livre = $livreRepository->find(123);
-        $livreRepository->remove($livre, true);
+        dump($livre);
+        
+        if ($livre) {
+            $livreRepository->remove($livre, true);
+            $manager->flush();
+        }
+        
+        dump($livre);
 
         exit();
     }
 
-    #[Route('/db/test/emprunts/new', name: 'app_db_test_emprunts_new', methods: ['GET', 'POST'])]
+    #[Route('/db/test/emprunts/new', name: 'app_db_test_emprunts_new')]
     public function newEmprunt(
-        ObjectManager $manager, Emprunt $emprunt,
+        EntityManagerInterface $manager,
         EmprunteurRepository $emprunteurRepository,
         LivreRepository $livreRepository,
         ): Response
     {
         $emprunteur = $emprunteurRepository->find(1);
+        dump($emprunteur);
         $livre = $livreRepository->find(1);
+        dump($livre);
 
         $emprunt = new Emprunt();
         $emprunt->setDateEmprunt(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-12-01 16:00:00'));
@@ -217,25 +240,37 @@ class DbTestController extends AbstractController
         $manager->persist($emprunt);
         $manager->flush();
 
+        dump($emprunt);
         exit();
     }
 
-    #[Route('/db/test/emprunts/edit', name: 'app_db_test_emprunts_edit', methods: ['GET', 'POST'])]
-    public function edit(ObjectManager $manager, EmpruntRepository $empruntRepository): Response
+    #[Route('/db/test/emprunts/edit', name: 'app_db_test_emprunts_edit')]
+    public function edit(EntityManagerInterface $manager, EmpruntRepository $empruntRepository): Response
     {
-        $emprunt = $genreRepository->find(3);
+        $emprunt = $empruntRepository->find(3);
+        dump($emprunt);
         $emprunt->setDateRetour(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2020-05-01 10:00:00'));
 
         $manager->persist($emprunt);
         $manager->flush();
 
+        dump($emprunt);
+
         exit();
     }
 
-    #[Route('/db/test/emprunts/delete', name: 'app_db_test_emunts_delete', methods: ['POST'])]
-    public function delete(EmpruntRepository $empruntRepository): Response
+    #[Route('/db/test/emprunts/delete', name: 'app_db_test_emunts_delete')]
+    public function delete(EntityManagerInterface $manager, EmpruntRepository $empruntRepository): Response
     {
-        $emprunt = $empruntRepository->find(123);
-        $empruntRepository->remove($emprunt, true);
+        $emprunt = $empruntRepository->find(42);
+        dump($emprunt);
+
+        if ($emprunt) {
+            $empruntRepository->remove($emprunt);
+            $manager->flush();
+        }
+
+        dump($emprunt);
+        exit();
     }
 }
