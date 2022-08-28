@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Emprunteur index{% endblock %}
+
+{% block body %}
+    <h1>Emprunteur index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Tel</th>
+                <th>Actif</th>
+                <th>Created_at</th>
+                <th>Updated_at</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for emprunteur in emprunteurs %}
+            <tr>
+                <td>{{ emprunteur.id }}</td>
+                <td>{{ emprunteur.nom }}</td>
+                <td>{{ emprunteur.prenom }}</td>
+                <td>{{ emprunteur.tel }}</td>
+                <td>{{ emprunteur.actif ? 'Yes' : 'No' }}</td>
+                <td>{{ emprunteur.createdAt ? emprunteur.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ emprunteur.updatedAt ? emprunteur.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_emprunteur_show', {'id': emprunteur.id}) }}">show</a>
+                    <a href="{{ path('app_emprunteur_edit', {'id': emprunteur.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_emprunteur_new') }}">Create new</a>
+{% endblock %}
