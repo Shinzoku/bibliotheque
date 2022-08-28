@@ -6,16 +6,19 @@ use App\Entity\Emprunt;
 use App\Entity\Emprunteur;
 use App\Entity\Livre;
 use App\Entity\User;
+use App\Repository\AuteurRepository;
 use App\Repository\EmpruntRepository;
 use App\Repository\EmprunteurRepository;
+use App\Repository\GenreRepository;
 use App\Repository\LivreRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DbTestController extends AbstractController
 {
@@ -148,7 +151,7 @@ class DbTestController extends AbstractController
 
     #[Route('/db/test/livres/new', name: 'app_db_test_livres_new')]
     public function newLivre(
-        EntityManagerInterface $manager, Livre $livre,
+        EntityManagerInterface $manager,
         AuteurRepository $auteurRepository,
         GenreRepository $genreRepositiry
         ): Response
@@ -179,7 +182,7 @@ class DbTestController extends AbstractController
     public function editlivre(
         EntityManagerInterface $manager,
         LivreRepository $livreRepository,
-        GenreRepository $genreRepositiry
+        GenreRepository $genreRepository
         ): Response
     {
         $genreSelected = $genreRepository->find(2);
@@ -188,8 +191,12 @@ class DbTestController extends AbstractController
         $genreNew =$genreRepository->find(5);
         dump($genreNew);
 
-        $livre->$livreRepository->find(2);
+        $livre = $livreRepository->find(2);
         dump($livre);
+        $genres = $livre->getGenre();
+        foreach ($genres as $genre) {
+            dump($genre);
+        }
 
         $livre->setTitre('Aperiendum est igitur');
         $livre->removeGenre($genreSelected);
@@ -199,6 +206,10 @@ class DbTestController extends AbstractController
         $manager->flush();
 
         dump($livre);
+        $genres = $livre->getGenre();
+        foreach ($genres as $genre) {
+            dump($genre);
+        }
 
         exit();
     }
