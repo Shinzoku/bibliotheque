@@ -23,7 +23,7 @@ class EmpruntController extends AbstractController
     }
 
     #[Route('/', name: 'app_emprunt_index', methods: ['GET'])]
-    public function index(EmpruntRepository $empruntRepository): Response
+    public function index(EmpruntRepository $empruntRepository, EmprunteurRepository $emprunteurRepository): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -34,8 +34,8 @@ class EmpruntController extends AbstractController
 
         } elseif ($this->isGranted('ROLE_EMPRUNTEUR')) {
             $user = $this->getUser();
-            $emprunteur = $this->empruntRepository->findByUser($user);
-            $emprunts = $emprunteur->getEmprunts();
+            $emprunteur = $this->emprunteurRepository->findByUser($user);
+            $emprunts = $emprunteur->getEmprunt();
         }
 
         return $this->render('emprunt/index.html.twig', [
@@ -67,6 +67,8 @@ class EmpruntController extends AbstractController
     #[Route('/{id}', name: 'app_emprunt_show', methods: ['GET'])]
     public function show(Emprunt $emprunt): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         return $this->render('emprunt/show.html.twig', [
             'emprunt' => $emprunt,
         ]);

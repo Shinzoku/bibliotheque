@@ -61,11 +61,10 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         } elseif (in_array('ROLE_EMPRUNTEUR', $roles)) {
             $emprunteur = $this->emprunteurRepository->findByUser($user);
-            $id = $emprunteur->getId();
 
             return new RedirectResponse($this->urlGenerator->generate('app_emprunt_index'));
         }
-        return new RedirectResponse($this->urlGenerator->generate('/'));
+        return new RedirectResponse($this->urlGenerator->generate('app_front_livre'));
     }
 
     protected function getLoginUrl(Request $request): string

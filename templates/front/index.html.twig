@@ -10,14 +10,13 @@
 
 <div class="example-wrapper">
     <h1>Catalogue</h1>
-
     {% if livres %}
     <ul>
         {% for livre in livres %}
         <li>
-            <a href="{{ path('app_front_livre', {'id': livre.id}) }} ">{{ livre.titre }}</a>
+            <a href="{{ path('app_livre_show', {'id': livre.id}) }}">{{ livre.titre }}</a>
             
-            (auteur : {{ livre.auteur.nom }} {{ livre.auteur.prenom }})
+            (auteur : {{ livre.auteur.nom }} {{ livre.auteur.prenom }}, année d'édition : {{ livre.anneeEdition }}, nombre de page : {{ livre.nombrePages }})
             
         </li>
         {% endfor %}

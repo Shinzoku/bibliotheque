@@ -81,7 +81,7 @@ class TestFixtures extends Fixture
         for ($i = 0; $i < 100; $i++) { 
             $user = new User();
             $user->setEmail($faker->freeEmail());
-            $user->setRoles(['ROLE_EMRUNTEUR']);
+            $user->setRoles(['ROLE_EMPRUNTEUR']);
             $password = $this->hasher->hashPassword($user, '123');
             $user->setPassword($password);
             $user->setEnabled(true);

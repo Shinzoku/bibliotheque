@@ -1,20 +1,20 @@
 {% extends 'base.html.twig' %}
-{% block title %}Mon site - {{ livre.title }}{% endblock %}
+{% block title %}Mon site - {{ livre.titre }}{% endblock %}
 {% block body %}
-<article>
-<h2>Titre : {{ livre.title }}</h2>
+
+<h2>Titre : {{ livre.titre }}</h2>
 
 <p>Auteur : {{ livre.auteur.nom }} {{ livre.auteur.prenom }}</p>
 
-<p>Édité en : {{ livre.annee_edition }}</p>
-<p>Nombre de pages : {{ livre.nombre_pages }}</p>
-<p>Code ISBN : {{ livre.code_isbn }}</p>
+<p>Édité en : {{ livre.anneeEdition }}</p>
+<p>Nombre de pages : {{ livre.nombrePages }}</p>
+<p>Code ISBN : {{ livre.codeIsbn }}</p>
 
 <div>
-{% for genre in livre.genres %}
+{% for genre in livre.genre %}
     #{{ genre.nom }} <br>
 {% endfor %}
 </div>
 
-</article>
+<a href="{{ path('app_front_livre') }}">back to list</a>
 {% endblock %}
