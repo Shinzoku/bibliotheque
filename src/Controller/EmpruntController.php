@@ -5,25 +5,49 @@ namespace App\Controller;
 use App\Entity\Emprunt;
 use App\Form\EmpruntType;
 use App\Repository\EmpruntRepository;
+use App\Repository\EmprunteurRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-#[Route('/emprunt')]
+#[Route('admin/emprunt')]
 class EmpruntController extends AbstractController
 {
+    private EmprunteurRepository $emprunteurRepository;
+    
+    public function __construct(EmprunteurRepository $emprunteurRepository)
+    {
+        $this->emprunteurRepository = $emprunteurRepository;
+    }
+
     #[Route('/', name: 'app_emprunt_index', methods: ['GET'])]
     public function index(EmpruntRepository $empruntRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $emprunts = [];
+        
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $emprunts = $empruntRepository->findAll();
+
+        } elseif ($this->isGranted('ROLE_EMPRUNTEUR')) {
+            $user = $this->getUser();
+            $emprunteur = $this->empruntRepository->findByUser($user);
+            $emprunts = $emprunteur->getEmprunts();
+        }
+
         return $this->render('emprunt/index.html.twig', [
-            'emprunts' => $empruntRepository->findAll(),
+            'emprunts' => $emprunts,
         ]);
     }
 
     #[Route('/new', name: 'app_emprunt_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EmpruntRepository $empruntRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'User tried to access a page without having ROLE_ADMIN');
+
         $emprunt = new Emprunt();
         $form = $this->createForm(EmpruntType::class, $emprunt);
         $form->handleRequest($request);
@@ -51,6 +75,8 @@ class EmpruntController extends AbstractController
     #[Route('/{id}/edit', name: 'app_emprunt_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Emprunt $emprunt, EmpruntRepository $empruntRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'User tried to access a page without having ROLE_ADMIN');
+
         $form = $this->createForm(EmpruntType::class, $emprunt);
         $form->handleRequest($request);
 
@@ -69,6 +95,8 @@ class EmpruntController extends AbstractController
     #[Route('/{id}', name: 'app_emprunt_delete', methods: ['POST'])]
     public function delete(Request $request, Emprunt $emprunt, EmpruntRepository $empruntRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'User tried to access a page without having ROLE_ADMIN');
+
         if ($this->isCsrfTokenValid('delete'.$emprunt->getId(), $request->request->get('_token'))) {
             $empruntRepository->remove($emprunt, true);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Repository\EmprunteurRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,8 +22,13 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    private EmprunteurRepository $emprunteurRepository;
+    private UrlGeneratorInterface $urlGenerator;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator, EmprunteurRepository $emprunteurRepository)
     {
+        $this->emprunteurRepository = $emprunteurRepository;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function authenticate(Request $request): Passport
@@ -50,25 +56,16 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         $roles = $user->getRoles();
 
-        // if (in_array('ROLE_EDITOR', $roles)) {
-        //     $editor = $this->editorRepository->findByUser($user);
-        //     // il est possible de récupérer des informations sur le profil
-        //     // $id = $editor->getId();
+        if (in_array('ROLE_ADMIN', $roles)) {
+            return new RedirectResponse($this->urlGenerator->generate('app_emprunt_index'));
 
-        //     return new RedirectResponse($this->urlGenerator->generate('app_admin_article_index'));
+        } elseif (in_array('ROLE_EMPRUNTEUR', $roles)) {
+            $emprunteur = $this->emprunteurRepository->findByUser($user);
+            $id = $emprunteur->getId();
 
-        // } elseif (in_array('ROLE_WRITER', $roles)) {
-        //     $writer = $this->writerRepository->findByUser($user);
-        //     // il est possible de récupérer des informations sur le profil
-        //     // $id = $writer->getId();
-
-        //     return new RedirectResponse($this->urlGenerator->generate('app_admin_article_index'));
-        // }
-        // // la redirection par défaut pour les utilisateurs
-        // return new RedirectResponse($this->urlGenerator->generate('app_front_index'));
-        // For example:
-        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+            return new RedirectResponse($this->urlGenerator->generate('app_emprunt_index'));
+        }
+        return new RedirectResponse($this->urlGenerator->generate('/'));
     }
 
     protected function getLoginUrl(Request $request): string

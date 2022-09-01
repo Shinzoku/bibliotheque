@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/genre')]
+#[Route('admin/genre')]
 class GenreController extends AbstractController
 {
     #[Route('/', name: 'app_genre_index', methods: ['GET'])]
