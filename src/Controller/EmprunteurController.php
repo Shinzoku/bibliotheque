@@ -30,7 +30,7 @@ class EmprunteurController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $emprunteurRepository->add($emprunteur, true);
-
+            $this->addFlash('success', 'Nouvel utilisateur créé!');
             return $this->redirectToRoute('app_emprunteur_index', [], Response::HTTP_SEE_OTHER);
         }
 

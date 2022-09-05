@@ -43,6 +43,9 @@ class Emprunteur
     public function __construct()
     {
         $this->emprunt = new ArrayCollection();
+        $this->actif = 1;
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
