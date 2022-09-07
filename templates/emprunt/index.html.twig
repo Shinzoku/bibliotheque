@@ -3,38 +3,41 @@
 {% block title %}Emprunt index{% endblock %}
 
 {% block body %}
-    <h1>Emprunt index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Date_emprunt</th>
-                <th>Date_retour</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for emprunt in emprunts %}
-            <tr>
-                <td>{{ emprunt.id }}</td>
-                <td>{{ emprunt.dateEmprunt ? emprunt.dateEmprunt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ emprunt.dateRetour ? emprunt.dateRetour|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_emprunt_show', {'id': emprunt.id}) }}">show</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('app_emprunt_edit', {'id': emprunt.id}) }}">edit</a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_emprunt_new') }}">Create new</a>
-    {% endif %}
+    <h1 class="text-center m-5">Emprunt index</h1>
+    <div class="container-fluid d-flex justify-content-center">
+        <table class="table table-hover w-50">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Date_emprunt</th>
+                    <th>Date_retour</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for emprunt in emprunts %}
+                <tr>
+                    <td>{{ emprunt.id }}</td>
+                    <td>{{ emprunt.dateEmprunt ? emprunt.dateEmprunt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ emprunt.dateRetour ? emprunt.dateRetour|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_emprunt_show', {'id': emprunt.id}) }}" class="btn btn-outline-primary">show</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_emprunt_edit', {'id': emprunt.id}) }}" class="btn btn-outline-dark">edit</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if is_granted('ROLE_ADMIN') %}
+        <div>
+            <a href="{{ path('app_emprunt_new') }}" class="btn btn-outline-success">+ Emprunt</a>
+        </div>
+        {% endif %}
+    </div>
 {% endblock %}

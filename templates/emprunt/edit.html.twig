@@ -3,11 +3,14 @@
 {% block title %}Edit Emprunt{% endblock %}
 
 {% block body %}
-    <h1>Edit Emprunt</h1>
+    <h1 class="text-center m-5">Edit Emprunt</h1>
 
-    {{ include('emprunt/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="container-fluid d-flex flex-column align-items-center">
+        {{ include('emprunt/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="d-flex">
+            <a href="{{ path('app_emprunt_index') }}" class="btn btn-outline-info">back to list</a>
 
-    <a href="{{ path('app_emprunt_index') }}">back to list</a>
-
-    {{ include('emprunt/_delete_form.html.twig') }}
+            {{ include('emprunt/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

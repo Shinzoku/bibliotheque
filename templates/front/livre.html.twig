@@ -1,20 +1,24 @@
 {% extends 'base.html.twig' %}
 {% block title %}Mon site - {{ livre.titre }}{% endblock %}
 {% block body %}
+<h1 class="text-center m-5">Détails livre</h1>
+<div class="container-fluid d-flex flex-column align-items-center">
+    <div class="card" style="width: 18rem;">
+        <img src="#" class="card-img-top" alt="...">
+        <div class="card-body">
+            <p>Titre : {{ livre.titre }}</p>
 
-<h2>Titre : {{ livre.titre }}</h2>
+            <p>Auteur : {{ livre.auteur.nom }} {{ livre.auteur.prenom }}</p>
 
-<p>Auteur : {{ livre.auteur.nom }} {{ livre.auteur.prenom }}</p>
-
-<p>Édité en : {{ livre.anneeEdition }}</p>
-<p>Nombre de pages : {{ livre.nombrePages }}</p>
-<p>Code ISBN : {{ livre.codeIsbn }}</p>
-
-<div>
-{% for genre in livre.genre %}
-    #{{ genre.nom }} <br>
-{% endfor %}
+            <p>Édité en : {{ livre.anneeEdition }}</p>
+            <p>Nombre de pages : {{ livre.nombrePages }}</p>
+            <p>Code ISBN : {{ livre.codeIsbn }}</p>
+            <span>Genres : </span>
+            {% for genre in livre.genre %}
+                <span>#{{ genre.nom }} </span>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{{ path('app_front_livre') }}" class="btn btn-outline-info">back to list</a>
 </div>
-
-<a href="{{ path('app_front_livre') }}">back to list</a>
 {% endblock %}

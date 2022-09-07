@@ -8,21 +8,31 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1>Catalogue</h1>
-    {% if livres %}
-    <ul>
+<h1 class="text-center m-5">Catalogue de livres</h1>
+<div class="container-fluid d-flex justify-content-center">
+    <table class="table table-hover w-50">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Année d'édition</th>
+                <th>Nombre de page</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for livre in livres %}
-        <li>
-            <a href="{{ path('app_livre_show', {'id': livre.id}) }}">{{ livre.titre }}</a>
-            
-            (auteur : {{ livre.auteur.nom }} {{ livre.auteur.prenom }}, année d'édition : {{ livre.anneeEdition }}, nombre de page : {{ livre.nombrePages }})
-            
-        </li>
+            <tr>
+                <td><a class="text-decoration-none" href="{{ path('app_livre_show', {'id': livre.id}) }}">{{ livre.titre }}</a></td>
+                <td>{{ livre.auteur.nom }} {{ livre.auteur.prenom }}</td>
+                <td>{{ livre.anneeEdition }}</td>
+                <td>{{ livre.nombrePages }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">pas de livres</td>
+            </tr>
         {% endfor %}
-    </ul>
-    {% else %}
-    Il n'y a encore aucun livre.
-    {% endif %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
