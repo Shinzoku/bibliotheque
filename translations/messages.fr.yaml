@@ -1,0 +1,10 @@
+nom: nom
+prénom: prénom
+téléphone: téléphone
+email: email
+password: password
+status emprunteur: status emprunteur
+status user: status user
+Actif: Actif
+Inactif: Inactif
+Ajouter: Ajouter

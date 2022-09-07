@@ -90,7 +90,7 @@ class EmpruntRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.date_retour < :date')
-            ->setParameter('date', $date)
+            ->setParameter('date', $date->format('Y-m-d H:i:s'))
             ->getQuery()
             ->getResult()
         ;
@@ -99,7 +99,7 @@ class EmpruntRepository extends ServiceEntityRepository
     /**
      * @return Emprunt[] Returns an array of Emprunt objects
      */
-    public function findByDateRetourNull(): array
+    public function findByDateRetourIsNull(): array
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.date_retour IS NULL')
@@ -111,7 +111,7 @@ class EmpruntRepository extends ServiceEntityRepository
     /**
      * @return Emprunt[] Returns an array of Emprunt objects
      */
-    public function findRetourNull(Livre $livre): array
+    public function findOneByDateRetourIsNull(Livre $livre): array
     {
         return $this->createQueryBuilder('e')
             ->join('e.livre', 'l')

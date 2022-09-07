@@ -16,19 +16,16 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'attr' => [
-                    'placeholder' => 'ex: exemple@email.com',
-                ],
+                'label' => 'email',
             ])
             ->add('password', PasswordType::class, [
-                'attr' => [
-                    'placeholder' => 'Entrez votre mot de passe',
-                ],
+                'label' => 'password',
             ])
             ->add('enabled', ChoiceType::class, [
+                'label' => 'status user',
                 'choices' => [
-                    'Actif' => true,
-                    'Inactif' => false,
+                    'Actif' => 1,
+                    'Inactif' => 0,
                 ],
                 'multiple' => false,
                 'expanded' => true,

@@ -16,23 +16,17 @@ class EmprunteurType extends AbstractType
     {
         $builder
             ->add('user', UserType::class)
-            ->add('ajouter', SubmitType::class)
             ->add('nom', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'ex: Doe',
-                ],
+                'label' => 'nom',
             ])
             ->add('prenom', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'ex: John',
-                ],
+                'label' => 'prénom',
             ])
             ->add('tel', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'ex: 0680458390',
-                ],
+                'label' => 'téléphone',
             ])
             ->add('actif', ChoiceType::class, [
+                'label' => 'status emprunteur',
                 'choices' => [
                     'Actif' => 1,
                     'Inactif' => 0,
@@ -40,7 +34,6 @@ class EmprunteurType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
             ])
-
         ;
     }
 

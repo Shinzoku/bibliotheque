@@ -2,14 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\UserType;
 use App\Entity\Emprunteur;
 use App\Form\EmprunteurType;
 use App\Repository\EmprunteurRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * Require ROLE_ADMIN for all the actions of this controller
+ */
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/emprunteur')]
 class EmprunteurController extends AbstractController
 {
@@ -22,21 +31,32 @@ class EmprunteurController extends AbstractController
     }
 
     #[Route('/new', name: 'app_emprunteur_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EmprunteurRepository $emprunteurRepository): Response
+    public function new(Request $request, EntityManagerInterface $manager, EmprunteurRepository $emprunteurRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $emprunteur = new Emprunteur();
         $form = $this->createForm(EmprunteurType::class, $emprunteur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $user = $emprunteur->getUser();
+            $notHashedPassword = $user->getPassword();
+            $hashedPassword = $passwordHasher->hashPassword($user, $notHashedPassword);
+            $user->setPassword($hashedPassword);
+
+            $manager->persist($user);
+            
             $emprunteurRepository->add($emprunteur, true);
-            $this->addFlash('success', 'Nouvel utilisateur créé!');
+
+            $this->addFlash('success', 'Nouvel utilisateur créé !');
+
             return $this->redirectToRoute('app_emprunteur_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('emprunteur/new.html.twig', [
             'emprunteur' => $emprunteur,
             'form' => $form,
+            // 'formUser' => $formUser,
         ]);
     }
 

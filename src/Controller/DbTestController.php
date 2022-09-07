@@ -137,13 +137,13 @@ class DbTestController extends AbstractController
         $emprunts = $empruntRepository->findByDateRetourAvantLe($date);
         dump($emprunts);
 
-        $emprunts = $empruntRepository->findByDateRetourNull();
+        $emprunts = $empruntRepository->findByDateRetourIsNull();
         dump($emprunts);
 
         $livre = $livreRepository->find(3);
         dump($livre);
 
-        $emprunts = $empruntRepository->findRetourNull($livre);
+        $emprunts = $empruntRepository->findOneByDateRetourIsNull($livre);
         dump($emprunts);
 
         exit();
